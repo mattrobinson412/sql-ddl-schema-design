@@ -3,106 +3,62 @@
 -- NOTE! If you have used non-SQL datatypes in your design, you will have to change these here.
 
 
-CREATE TABLE "TEAMS" (
-    "TeamId" serial   NOT NULL,
-    "SeasonId" int   NOT NULL,
-    "Name" text   NOT NULL,
-    CONSTRAINT "pk_TEAMS" PRIMARY KEY (
-        "TeamId"
-     )
+CREATE TABLE "teams" (
+    "id" serial PRIMARY KEY NOT NULL,
+    "city" text   NOT NULL,
+    "name" text   NOT NULL,
 );
 
-CREATE TABLE "STATS" (
-    "SeasonId" int   NOT NULL,
-    "GameId" int   NOT NULL,
-    "PlayerId" int   NOT NULL,
-    "Goals" int   NOT NULL
+CREATE TABLE "referees" (
+    "id" SERIAL PRIMARY KEY NOT NULL,
+    "name" text NOT NULL
 );
 
-CREATE TABLE "PLAYERS" (
-    "PlayerId" serial   NOT NULL,
-    "SeasonId" int   NOT NULL,
-    "TeamId" int   NOT NULL,
-    CONSTRAINT "pk_PLAYERS" PRIMARY KEY (
-        "PlayerId"
-     )
+CREATE TABLE "season" (
+    "id" SERIAL PRIMARY KEY NOT NULL,
+    start_date VARCHAR(10) NOT NULL,
+    end_date VARCHAR(10) NOT NULL
+
+CREATE TABLE "matches" (
+    "id" SERIAL PRIMARY KEY NOT NULL,
+    "home_team_id" INT FOREIGN KEY REFERENCES "teams.id" NOT NULL,
+    "away_team_id" INT FOREIGN KEY REFERENCES "teams.id" NOT NULL,
+    "location" text NOT NULL,
+    "date" VARCHAR(10) NOT NULL,
+    start_time VARCHAR(5) NOT NULL,
+    season_id INT FOREIGN KEY REFERENCES "season.id" NOT NULL,
+    head_referee_id INT FOREIGN KEY REFERENCES "referees.id" NOT NULL,
+    assistant_referee_1_id INT FOREIGN KEY REFERENCES "referees.id" NOT NULL,
+    assistant_referee_2_id INT FOREIGN KEY REFERENCES "referees.id" NOT NULL
 );
 
-CREATE TABLE "REFEREES" (
-    "RefId" serial   NOT NULL,
-    "SeasonId" int   NOT NULL,
-    "GameId" int   NOT NULL,
-    CONSTRAINT "pk_REFEREES" PRIMARY KEY (
-        "RefId"
-     )
+CREATE TABLE "players" (
+    "id" SERIAL PRIMARY KEY NOT NULL,
+    "name" text NOT NULL,
+    "birthday" VARCHAR(10) NOT NULL,
+    "height" int NOT NULL,
+    "current_team_id" INT FOREIGN KEY REFERENCES "teams.id" NOT NULL
 );
 
-CREATE TABLE "MATCHES" (
-    "GameId" serial   NOT NULL,
-    "SeasonId" int   NOT NULL,
-    "HomeTeamId" int   NOT NULL,
-    "HomeTeamScore" int   NOT NULL,
-    "AwayTeamScore" int   NOT NULL,
-    "AwayTeamId" int   NOT NULL,
-    CONSTRAINT "pk_MATCHES" PRIMARY KEY (
-        "GameId"
-     )
+CREATE TABLE "goals" (
+    "id" SERIAL PRIMARY KEY NOT NULL,
+    "player_id" INT FOREIGN KEY REFERENCES "players.id" NOT NULL,
+    "match_id" INT FOREIGN KEY REFERENCES 'matches.id' NOT NULL
 );
 
-CREATE TABLE "DATES" (
-    "SeasonId" serial   NOT NULL,
-    "StartDate" date   NOT NULL,
-    "EndDate" date   NOT NULL,
-    CONSTRAINT "pk_DATES" PRIMARY KEY (
-        "SeasonId"
-     )
+
+
+CREATE TABLE "lineups" (
+    "id" SERIAL PRIMARY KEY NOT NULL,
+    "player_id" INT FOREIGN KEY REFERENCES "players.id" NOT NULL,
+    "match_id" INT FOREIGN KEY REFERENCES "matches.id" NOT NULL,
+    "team_id" INT FOREIGN KEY REFERENCES "teams.id" NOT NULL
 );
 
-CREATE TABLE "RANKINGS" (
-    "RankId" serial   NOT NULL,
-    "SeasonId" int   NOT NULL,
-    "TeamId" int   NOT NULL,
-    CONSTRAINT "pk_RANKINGS" PRIMARY KEY (
-        "RankId"
-     )
-);
 
-ALTER TABLE "TEAMS" ADD CONSTRAINT "fk_TEAMS_SeasonId" FOREIGN KEY("SeasonId")
-REFERENCES "DATES" ("SeasonId");
-
-ALTER TABLE "STATS" ADD CONSTRAINT "fk_STATS_SeasonId" FOREIGN KEY("SeasonId")
-REFERENCES "DATES" ("SeasonId");
-
-ALTER TABLE "STATS" ADD CONSTRAINT "fk_STATS_GameId" FOREIGN KEY("GameId")
-REFERENCES "MATCHES" ("GameId");
-
-ALTER TABLE "STATS" ADD CONSTRAINT "fk_STATS_PlayerId" FOREIGN KEY("PlayerId")
-REFERENCES "PLAYERS" ("PlayerId");
-
-ALTER TABLE "PLAYERS" ADD CONSTRAINT "fk_PLAYERS_SeasonId" FOREIGN KEY("SeasonId")
-REFERENCES "DATES" ("SeasonId");
-
-ALTER TABLE "PLAYERS" ADD CONSTRAINT "fk_PLAYERS_TeamId" FOREIGN KEY("TeamId")
-REFERENCES "TEAMS" ("TeamId");
-
-ALTER TABLE "REFEREES" ADD CONSTRAINT "fk_REFEREES_SeasonId" FOREIGN KEY("SeasonId")
-REFERENCES "DATES" ("SeasonId");
-
-ALTER TABLE "REFEREES" ADD CONSTRAINT "fk_REFEREES_GameId" FOREIGN KEY("GameId")
-REFERENCES "MATCHES" ("GameId");
-
-ALTER TABLE "MATCHES" ADD CONSTRAINT "fk_MATCHES_SeasonId" FOREIGN KEY("SeasonId")
-REFERENCES "DATES" ("SeasonId");
-
-ALTER TABLE "MATCHES" ADD CONSTRAINT "fk_MATCHES_HomeTeamId" FOREIGN KEY("HomeTeamId")
-REFERENCES "TEAMS" ("TeamId");
-
-ALTER TABLE "MATCHES" ADD CONSTRAINT "fk_MATCHES_AwayTeamId" FOREIGN KEY("AwayTeamId")
-REFERENCES "TEAMS" ("TeamId");
-
-ALTER TABLE "RANKINGS" ADD CONSTRAINT "fk_RANKINGS_SeasonId" FOREIGN KEY("SeasonId")
-REFERENCES "DATES" ("SeasonId");
-
-ALTER TABLE "RANKINGS" ADD CONSTRAINT "fk_RANKINGS_TeamId" FOREIGN KEY("TeamId")
-REFERENCES "TEAMS" ("TeamId");
-
+CREATE TABLE "results" (
+    "id" SERIAL PRIMARY KEY NOT NULL,
+    "team_id" INT FOREIGN KEY REFERENCES "teams.id" NOT NULL,
+    "match_id" INT FOREIGN KEY REFERENCES "matches.id" NOT NULL,
+    "result" text NOT NULL
+ );

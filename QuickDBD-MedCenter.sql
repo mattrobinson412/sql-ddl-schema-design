@@ -2,42 +2,40 @@
 -- Link to schema: https://app.quickdatabasediagrams.com/#/d/hC11XZ
 -- NOTE! If you have used non-SQL datatypes in your design, you will have to change these here.
 
-
-CREATE TABLE "PRACTICES" (
-    "PracticeId" serial   NOT NULL,
-    "Location" text   NOT NULL,
-    CONSTRAINT "pk_PRACTICES" PRIMARY KEY (
-        "PracticeId"
-     )
+CREATE TABLE "doctors" (
+    "id" serial PRIMARY KEY NOT NULL,
+    "name" text   NOT NULL,
+    "specialty" text   NOT NULL
 );
 
-CREATE TABLE "PRACTICIONERS" (
-    "DocId" serial   NOT NULL,
-    "PracticeId" int   NOT NULL,
-    "FirstName" text   NOT NULL,
-    "LastName" text   NOT NULL,
-    "PatientId" int   NOT NULL
+CREATE TABLE "patients" (
+    "id" serial PRIMARY KEY NOT NULL,
+    "name" text   NOT NULL,
+    "insurance" text   NOT NULL,
+    "birthday" varchar(10) NOT NULL
 );
 
-CREATE TABLE "PATIENTS" (
-    "PatientId" serial   NOT NULL,
-    "FirstName" text   NOT NULL,
-    "LastName" text   NOT NULL,
-    "ProgId" int   NOT NULL,
-    "DocId" int   NOT NULL
+CREATE TABLE "visits" (
+    "id" SERIAL PRIMARY KEY NOT NULL,
+    "doctor_id" INT FOREIGN KEY REFERENCES "doctors.id" NOT NULL,
+    "patient_id" INT FOREIGN KEY REFERENCES "patients.id" NOT NULL,
+    "date" VARCHAR(10) NOT NULL
 );
 
-CREATE TABLE "PROGNOSES" (
-    "ProgId" serial   NOT NULL,
-    "Name" text   NOT NULL
+CREATE TABLE "diseases" (
+    "id" serial PRIMARY KEY NOT NULL,
+    "name" text   NOT NULL,
+    "description" text NOT NULL
 );
 
-ALTER TABLE "PRACTICES" ADD CONSTRAINT "fk_PRACTICES_PracticeId" FOREIGN KEY("PracticeId")
-REFERENCES "PRACTICIONERS" ("PracticeId");
+CREATE TABLE "diagnoses" (
+    "id" serial PRIMARY KEY NOT NULL,
+    "visit_id" int FOREIGN KEY REFERENCES "visits.id" NOT NULL,
+    "disease_id" int FOREIGN KEY REFERENCES "diseases.id" NOT NULL,
+    "notes" text NOT NULL
+);
 
-ALTER TABLE "PRACTICIONERS" ADD CONSTRAINT "fk_PRACTICIONERS_DocId_PatientId" FOREIGN KEY("DocId", "PatientId")
-REFERENCES "PATIENTS" ("DocId", "PatientId");
 
-ALTER TABLE "PATIENTS" ADD CONSTRAINT "fk_PATIENTS_ProgId" FOREIGN KEY("ProgId")
-REFERENCES "PROGNOSES" ("ProgId");
+
+
 

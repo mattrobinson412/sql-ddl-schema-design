@@ -10,7 +10,6 @@ CREATE DATABASE air_traffic;
 CREATE TABLE tickets
 (
   id SERIAL PRIMARY KEY,
-  passenger INT NOT NULL REFERENCES passengers,
   seat TEXT NOT NULL,
   departure TIMESTAMP NOT NULL,
   arrival TIMESTAMP NOT NULL,
@@ -32,8 +31,7 @@ CREATE TABLE passengers
 CREATE TABLE cities
 (
   id SERIAL PRIMARY KEY,
-  city TEXT NOT NULL,
-  country INT NOT NULL REFERENCES countries
+  city TEXT NOT NULL
 );
 
 CREATE TABLE countries
@@ -49,36 +47,36 @@ CREATE TABLE airlines
 );
 
 INSERT INTO tickets
-  (seat, departure, arriva)
+  (seat, departure, arrival, airline, from_city, from_country, to_city, to_country)
 VALUES
-  ('33B', '2018-04-08 09:00:00', '2018-04-08 12:00:00'),
-  ('8A', '2018-12-19 12:45:00', '2018-12-19 16:15:00'),
-  ('12F', '2018-01-02 07:00:00', '2018-01-02 08:03:00'
-  ('20A', '2018-04-15 16:50:00', '2018-04-15 21:00:00'),
-  ('23D', '2018-08-01 18:30:00', '2018-08-01 21:50:00'),
-  ( '18C', '2018-10-31 01:15:00', '2018-10-31 12:55:00'),
-  ( '9E', '2019-02-06 06:00:00', '2019-02-06 07:47:00'),
-  ( '1A', '2018-12-22 14:42:00', '2018-12-22 15:56:00'),
-  ( '32B', '2019-02-06 16:28:00', '2019-02-06 19:18:00'),
-  ( '10D', '2019-01-20 19:30:00', '2019-01-20 22:45:00');
+  ('33B', '2018-04-08 09:00:00', '2018-04-08 12:00:00', "New York", "USA", "Los Angeles", "USA"),
+  ('8A', '2018-12-19 12:45:00', '2018-12-19 16:15:00', "New York", "USA", "Los Angeles", "USA"),
+  ('12F', '2018-01-02 07:00:00', '2018-01-02 08:03:00', "New York", "USA", "Los Angeles", "USA"),
+  ('20A', '2018-04-15 16:50:00', '2018-04-15 21:00:00', "New York", "USA", "Los Angeles", "USA"),
+  ('23D', '2018-08-01 18:30:00', '2018-08-01 21:50:00', "New York", "USA", "Los Angeles", "USA"),
+  ( '18C', '2018-10-31 01:15:00', '2018-10-31 12:55:00', "New York", "USA", "Los Angeles", "USA"),
+  ( '9E', '2019-02-06 06:00:00', '2019-02-06 07:47:00', "New York", "USA", "Los Angeles", "USA"),
+  ( '1A', '2018-12-22 14:42:00', '2018-12-22 15:56:00', "New York", "USA", "Los Angeles", "USA"),
+  ( '32B', '2019-02-06 16:28:00', '2019-02-06 19:18:00', "New York", "USA", "Los Angeles", "USA"),
+  ( '10D', '2019-01-20 19:30:00', '2019-01-20 22:45:00', "New York", "USA", "Los Angeles", "USA");
 
 
 INSERT INTO passengers
-  (first_name, last_name)
+  (first_name, last_name, ticket)
 VALUES
-  ('Jennifer', 'Finch'),
-  ('Thadeus', 'Gathercoal'),
-  ('Sonja', 'Pauley'),
-  ('Jennifer', 'Finch'),
-  ('Waneta', 'Skeleton'),
-  ('Thadeus', 'Gathercoal'),
-  ('Berkie', 'Wycliff'),
-  ('Alvin', 'Leathes'),
-  ('Berkie', 'Wycliff'),
-  ('Cory', 'Squibbes'),
+  ('Jennifer', 'Finch', 2),
+  ('Thadeus', 'Gathercoal', 2),
+  ('Sonja', 'Pauley', 2),
+  ('Jennifer', 'Finch', 2),
+  ('Waneta', 'Skeleton', 2),
+  ('Thadeus', 'Gathercoal', 2),
+  ('Berkie', 'Wycliff', 2),
+  ('Alvin', 'Leathes', 2),
+  ('Berkie', 'Wycliff', 2),
+  ('Cory', 'Squibbes', 2);
 
 INSERT INTO cities
-  (cities)
+  (city)
 VALUES
   ('Washington DC'),
   ('Tokyo'),
@@ -89,10 +87,16 @@ VALUES
   ('New York'),
   ('Cedar Rapids'),
   ('Charlotte'),
-  ('Sao Paolo'),
+  ('Sao Paolo');
 
-INSERT INTO cities
-  (cities)
+INSERT INTO countries
+  (country)
+VALUES
+  ('USA'),
+  ('Japan')
+
+INSERT INTO airlines
+  (airline)
 VALUES
   ('United'),
   ('British Airways'),
